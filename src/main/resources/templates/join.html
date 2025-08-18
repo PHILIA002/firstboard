@@ -8,7 +8,16 @@
 </head>
 <body>
 <header>
-    <a href="/" class="brand">🌀 임시로고</a>
+    <div class="top-bar">
+        <div class="content">
+            <a href="/" class="brand">🌀 임시로고</a>
+            <div class="se-area">
+                <form class="search-box" th:action="@{/search}">
+                    <input id="keyword" name="keyword" placeholder="오늘 뭐하지?" required>
+                </form>
+            </div>
+        </div>
+    </div>
 </header>
 
 <main>
