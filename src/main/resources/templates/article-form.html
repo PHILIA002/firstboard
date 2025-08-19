@@ -6,25 +6,56 @@
     <title>새 글</title>
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>새 글 작성</h1>
-<form method="post" action="/articles">
-    <input type="hidden" id="article-id" th:value="${article} != null ? ${article.id} : ''" />
-    <div>
-        <label>제목
-            <input type="text" id="title" name="title" required>
-        </label>
+<header>
+    <div class="top-bar">
+        <div class="content">
+            <a href="/">
+                <img src="/images/myboard.png" alt="myboard" class="top-left logo">
+            </a>
+            <div class="se-area">
+                <form class="search-box" th:action="@{/search}">
+                    <input id="keyword" name="keyword" placeholder="My Board" required>
+                </form>
+            </div>
+            <nav class="top-right">
+                <ul>
+                    <th:block sec:authorize="isAnonymous()">
+                        <li><a href="/login">로그인</a></li>
+                        <li><a href="/join">회원가입</a></li>
+                    </th:block>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <span>안녕하세요, <strong th:text="${displayName}"></strong>님!</span>
+                        <form method="post" action="/logout" style="display:inline;">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button type="submit">로그아웃</button>
+                        </form>
+                    </th:block>
+                </ul>
+            </nav>
+        </div>
     </div>
-    <div>
-        <label>내용
-            <textarea id="content" name="content" rows="8" required></textarea>
-        </label>
+</header>
+<main>
+    <div class="list-form">
+        <form method="post" action="/articles">
+            <h2 class="login-header">새 글 작성</h2>
+            <input type="hidden" id="article-id" th:value="${article} != null ? ${article.id} : ''" />
+            <input type="text" id="title" class="wInputT" name="qna_title"
+                   autofocus placeholder="제목" required><br>
+            <textarea rows="15" id="content" name="qna_contents"
+                      placeholder="내용을 적어주세요." value="내용:"
+                      class="wInputC"></textarea><br>
+            <div class="btn-area">
+                <button type="button" id="create-btn" class="btnW upload">저장</button>
+                <button type="reset" class="btnW reset">지우기</button>
+                <a href="/articles">목록</a>
+            </div>
+        </form>
     </div>
-    <button type="button" id="create-btn">저장</button>
-    <a href="/articles">목록</a>
-</form>
+</main>
 <script src="/js/article.js" defer></script>
 </body>
 </html>

@@ -6,35 +6,61 @@
     <title>게시글 목록</title>
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <header>
-    <a href="/" class="brand">🌀 임시로고</a>
-    <div>
-      <span sec:authorize="isAnonymous()">
-        <a href="/login">로그인</a>
-        <a href="/join">회원가입</a>
-      </span>
-        <span sec:authorize="isAuthenticated()">
-        <span>안녕하세요, <strong th:text="${displayName}"></strong>님!</span>
-        <form method="post" action="/logout" style="display:inline;">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-          <button type="submit">로그아웃</button>
-        </form>
-      </span>
+    <div class="top-bar">
+        <div class="content">
+            <a href="/">
+                <img src="/images/myboard.png" alt="myboard" class="top-left logo">
+            </a>
+            <div class="se-area">
+                <form class="search-box" th:action="@{/search}">
+                    <input id="keyword" name="keyword" placeholder="My Board" required>
+                </form>
+            </div>
+            <nav class="top-right">
+                <ul>
+                    <th:block sec:authorize="isAnonymous()">
+                        <li><a href="/login">로그인</a></li>
+                        <li><a href="/join">회원가입</a></li>
+                    </th:block>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <span>안녕하세요, <strong th:text="${displayName}"></strong>님!</span>
+                        <form method="post" action="/logout" style="display:inline;">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button type="submit">로그아웃</button>
+                        </form>
+                    </th:block>
+                </ul>
+            </nav>
+        </div>
     </div>
 </header>
-<h1>게시글 목록</h1>
-<div sec:authorize="isAuthenticated()">
-    <a href="/articles/new">새글</a> <!-- 비회원은 안 보임 -->
-</div>
-
-<div th:if="${#lists.isEmpty(articles)}">아직 글이 없습니다.</div>
-<ul th:unless="${#lists.isEmpty(articles)}">
-    <li th:each="a : ${articles}">
-        <a th:href="@{'/articles/' + ${a.id}}" th:text="${a.title}">제목</a>
-    </li>
-</ul>
+<main>
+    <div class="list-form">
+        <h2 class="login-header">게시글 목록</h2>
+        <div class="data-area">
+            <div class="data-row">
+                <th:block th:if="${#lists.isEmpty(articles)}">
+                    <div style="width: 100%">아직 글이 없습니다.</div>
+                </th:block>
+                <th:block>
+                    <ul th:unless="${#lists.isEmpty(articles)}">
+                        <li th:each="a : ${articles}">
+                            <div class="d-in-row">
+                                <a th:href="@{'/articles/' + ${a.id}}" th:text="${a.title}">제목</a>
+                            </div>
+                        </li>
+                    </ul>
+                </th:block>
+            </div>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <a href="/articles/new" class="wr-btn">새 글 작성</a> <!-- 비회원은 안 보임 -->
+        </div>
+    </div>
+</main>
 </body>
 </html>
